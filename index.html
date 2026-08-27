@@ -44,81 +44,78 @@
             <p>All fields are required. Check each unit carefully, as incorrect units will materially change the result.</p>
           </div>
 
-          <div class="calculator-layout">
-            <form class="input-card" id="trace-form" novalidate>
-              <div class="field-grid">
-                <label class="field">
-                  <span>Tracheal length <b>mm</b></span>
+          <form class="input-card" id="trace-form" novalidate>
+            <div class="field-grid">
+              <label class="field">
+                <span>Tracheal length <b>mm</b></span>
+                <input
+                  id="trachea-length"
+                  name="tracheaLengthMm"
+                  type="number"
+                  min="0"
+                  step="any"
+                  inputmode="decimal"
+                  placeholder="e.g. 76.4"
+                  required
+                />
+              </label>
+              <label class="field">
+                <span>Mean tracheal radius <b>mm</b></span>
+                <input
+                  id="trachea-radius"
+                  name="tracheaRadiusMm"
+                  type="number"
+                  min="0"
+                  step="any"
+                  inputmode="decimal"
+                  placeholder="e.g. 6.4"
+                  required
+                />
+              </label>
+              <label class="field">
+                <span>Total lung volume</span>
+                <span class="volume-control">
                   <input
-                    id="trachea-length"
-                    name="tracheaLengthMm"
+                    id="lung-volume"
+                    name="lungVolume"
                     type="number"
                     min="0"
                     step="any"
                     inputmode="decimal"
-                    placeholder="e.g. 76.4"
+                    placeholder="e.g. 3854"
                     required
                   />
-                </label>
-                <label class="field">
-                  <span>Mean tracheal radius <b>mm</b></span>
-                  <input
-                    id="trachea-radius"
-                    name="tracheaRadiusMm"
-                    type="number"
-                    min="0"
-                    step="any"
-                    inputmode="decimal"
-                    placeholder="e.g. 6.4"
-                    required
-                  />
-                </label>
-                <label class="field">
-                  <span>Total lung volume</span>
-                  <span class="volume-control">
-                    <input
-                      id="lung-volume"
-                      name="lungVolume"
-                      type="number"
-                      min="0"
-                      step="any"
-                      inputmode="decimal"
-                      placeholder="e.g. 3854"
-                      required
-                    />
-                    <select id="lung-volume-unit" name="lungVolumeUnit" aria-label="Lung volume unit">
-                      <option value="ml">mL</option>
-                      <option value="mm3">mm³</option>
-                    </select>
-                  </span>
-                </label>
-                <label class="field">
-                  <span>Height <b>cm</b></span>
-                  <input
-                    id="height"
-                    name="heightCm"
-                    type="number"
-                    min="0"
-                    step="any"
-                    inputmode="decimal"
-                    placeholder="e.g. 163"
-                    required
-                  />
-                </label>
-              </div>
+                  <select id="lung-volume-unit" name="lungVolumeUnit" aria-label="Lung volume unit">
+                    <option value="ml">mL</option>
+                    <option value="mm3">mm³</option>
+                  </select>
+                </span>
+              </label>
+              <label class="field">
+                <span>Height <b>cm</b></span>
+                <input
+                  id="height"
+                  name="heightCm"
+                  type="number"
+                  min="0"
+                  step="any"
+                  inputmode="decimal"
+                  placeholder="e.g. 163"
+                  required
+                />
+              </label>
+            </div>
 
-              <p class="privacy-note">
-                <span aria-hidden="true">✓</span>
-                Your entries are processed locally and are never uploaded or stored.
-              </p>
-              <div class="form-actions">
-                <button class="primary-button" type="submit">Calculate TRACE score</button>
-                <button class="text-button" type="reset">Clear</button>
-              </div>
-              <p class="form-error" id="form-error" role="alert" hidden></p>
-            </form>
-
-          </div>
+            <p class="privacy-note">
+              <span aria-hidden="true">✓</span>
+              Your entries are processed locally and are never uploaded or stored.
+            </p>
+            <div class="form-actions">
+              <button class="primary-button" type="submit">Calculate TRACE score</button>
+              <button class="text-button" type="reset">Clear</button>
+            </div>
+            <p class="form-error" id="form-error" role="alert" hidden></p>
+          </form>
 
           <section class="results" id="results" aria-live="polite" hidden>
             <div class="result-summary">

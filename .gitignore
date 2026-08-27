@@ -1,4 +1,5 @@
 __pycache__/
 *.py[cod]
+.history/
 _site/
 screenshots/
