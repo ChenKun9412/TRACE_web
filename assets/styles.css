@@ -131,7 +131,6 @@ h1 {
   font-weight: 500;
 }
 
-.reference-card > p { margin-bottom: 0; color: #617571; font-size: 12px; }
 .reference-card dl { margin: 10px 0 0; }
 .reference-card dl div { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-top: 1px solid #d6e0da; }
 .reference-card dt { color: #71827f; font-size: 9px; }
