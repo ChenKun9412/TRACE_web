@@ -1,0 +1,29 @@
+{
+  "referenceCohortN": 42796,
+  "sourceHashes": {
+    "wenling_all_with_subgroup_tail.csv": "17ae3c86030962da612653fe0816dfbb7376ead78a03efa7633205958188acca",
+    "wenling_standardization_tail_threshold_summary_Discovery.xlsx": "a59923529332757c883124b4145156d6b4e446497ff6f059ff2f80f9a2e55628"
+  },
+  "phenotypes": {
+    "TLTI": {
+      "rawFormulaMaxAbsoluteError": 4.440892098500626e-16,
+      "zScoreMaxAbsoluteError": 8.881784197001252e-16,
+      "tail10GroupMismatches": 0,
+      "quantileGridPoints": 1001
+    },
+    "TLHI": {
+      "rawFormulaMaxAbsoluteError": 8.881784197001252e-16,
+      "zScoreMaxAbsoluteError": 4.440892098500626e-16,
+      "tail10GroupMismatches": 0,
+      "quantileGridPoints": 1001
+    },
+    "TCDI": {
+      "rawFormulaMaxAbsoluteError": 8.881784197001252e-16,
+      "zScoreMaxAbsoluteError": 5.329070518200751e-15,
+      "tail10GroupMismatches": 0,
+      "quantileGridPoints": 1001
+    }
+  },
+  "tail10ScoreMismatches": 0,
+  "validationPassed": true
+}

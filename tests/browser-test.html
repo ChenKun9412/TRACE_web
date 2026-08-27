@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head><meta charset="utf-8"><title>TRACE browser test</title></head>
+  <body data-status="RUNNING">
+    <pre id="output">RUNNING</pre>
+    <script src="../assets/reference-data.js"></script>
+    <script src="../assets/calculator.js"></script>
+    <script>
+      (function () {
+        const output = document.getElementById("output");
+        function assert(condition, message) {
+          if (!condition) throw new Error(message);
+        }
+        try {
+          const median = TRACECalculator.calculate({
+            tracheaLengthMm: 76.393482,
+            tracheaRadiusMm: 6.366434,
+            lungVolumeMl: 3773.749,
+            heightCm: 163,
+          }, TRACE_REFERENCE);
+          assert(median.score === 3, `median-like score: ${median.score}`);
+          assert(median.riskGroup === "Intermediate", `median-like risk: ${median.riskGroup}`);
+
+          const low = TRACECalculator.calculate({
+            tracheaLengthMm: 50,
+            tracheaRadiusMm: 10,
+            lungVolumeMl: 1200,
+            heightCm: 190,
+          }, TRACE_REFERENCE);
+          assert(low.score === 0 && low.riskGroup === "Low", "low case failed");
+
+          const high = TRACECalculator.calculate({
+            tracheaLengthMm: 130,
+            tracheaRadiusMm: 3.5,
+            lungVolumeMl: 9900,
+            heightCm: 133,
+          }, TRACE_REFERENCE);
+          assert(high.score === 6 && high.riskGroup === "High", "high case failed");
+
+          assert(
+            Math.abs(median.phenotypes.TLTI.raw - Math.log(76.393482 / 6.366434)) < 1e-12,
+            "TLTI formula failed",
+          );
+          document.body.dataset.status = "PASS";
+          output.textContent = "PASS: browser calculator assertions completed";
+        } catch (error) {
+          document.body.dataset.status = "FAIL";
+          output.textContent = `FAIL: ${error.message}`;
+        }
+      })();
+    </script>
+  </body>
+</html>
