@@ -56,8 +56,16 @@ a { color: inherit; }
   place-items: center;
   color: white;
   background: var(--forest);
-  font-family: Georgia, serif;
-  font-size: 23px;
+}
+
+.brand-mark svg {
+  width: 25px;
+  height: 25px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .brand strong { display: block; letter-spacing: 0.13em; font-size: 17px; }
