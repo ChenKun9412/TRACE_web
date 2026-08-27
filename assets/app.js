@@ -4,8 +4,6 @@
   const form = document.getElementById("trace-form");
   const errorBox = document.getElementById("form-error");
   const results = document.getElementById("results");
-  const preResult = document.getElementById("pre-result");
-  const calculatorLayout = document.querySelector(".calculator-layout");
   const phenotypeGrid = document.getElementById("phenotype-grid");
   const volumeInput = document.getElementById("lung-volume");
   const volumeUnit = document.getElementById("lung-volume-unit");
@@ -84,8 +82,6 @@
       .map((name) => phenotypeCard(calculation.phenotypes[name]))
       .join("");
     document.getElementById("score-marker").style.left = `${((calculation.score + 0.5) / 7) * 100}%`;
-    preResult.hidden = true;
-    calculatorLayout.classList.add("has-results");
     results.hidden = false;
   }
 
@@ -106,8 +102,6 @@
     } catch (error) {
       showError(error instanceof Error ? error.message : "Calculation failed. Check your entries and try again.");
       results.hidden = true;
-      preResult.hidden = false;
-      calculatorLayout.classList.remove("has-results");
     }
   });
 
@@ -115,8 +109,6 @@
     window.setTimeout(function () {
       clearError();
       results.hidden = true;
-      preResult.hidden = false;
-      calculatorLayout.classList.remove("has-results");
     }, 0);
   });
 

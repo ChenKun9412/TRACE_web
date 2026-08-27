@@ -12,7 +12,6 @@
         <input id="height" required>
         <button type="submit">Calculate</button>
       </form>
-      <aside id="pre-result">Preview</aside>
     </div>
     <p id="form-error" hidden></p>
     <section id="results" hidden>
@@ -68,8 +67,6 @@
           document.getElementById("height").value = 163;
           document.getElementById("trace-form").requestSubmit();
           assert(!document.getElementById("results").hidden, "results did not render");
-          assert(document.getElementById("pre-result").hidden, "preview was not hidden");
-          assert(document.querySelector(".calculator-layout").classList.contains("has-results"), "result layout class missing");
           assert(document.getElementById("score-value").textContent === "3", "rendered score failed");
           assert(document.getElementById("risk-value").textContent === "Intermediate risk", "rendered risk label failed");
           assert(!/[\u3400-\u9fff]/.test(document.getElementById("phenotype-grid").textContent), "dynamic interface contains Chinese text");
