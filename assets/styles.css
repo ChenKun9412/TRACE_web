@@ -127,7 +127,7 @@ h1 {
 
 .reference-card > strong {
   display: block;
-  font-family: Georgia, serif;
+  font-family: inherit;
   font-size: 35px;
   font-weight: 500;
 }
