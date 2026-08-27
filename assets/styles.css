@@ -58,19 +58,10 @@ a { color: inherit; }
   background: var(--forest);
 }
 
-.brand-mark svg {
+.brand-mark img {
+  display: block;
   width: 28px;
   height: 25px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.25;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.brand-mark .airway-fill {
-  fill: currentColor;
-  stroke: none;
 }
 
 .brand strong { display: block; letter-spacing: 0.13em; font-size: 17px; }
