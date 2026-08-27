@@ -5,19 +5,20 @@
   const errorBox = document.getElementById("form-error");
   const results = document.getElementById("results");
   const preResult = document.getElementById("pre-result");
+  const calculatorLayout = document.querySelector(".calculator-layout");
   const phenotypeGrid = document.getElementById("phenotype-grid");
   const volumeInput = document.getElementById("lung-volume");
   const volumeUnit = document.getElementById("lung-volume-unit");
 
   const PHENOTYPE_META = {
-    TLTI: { name: "气管长细指数", rawDigits: 4 },
-    TLHI: { name: "气管长度-身高指数", rawDigits: 4 },
-    TCDI: { name: "气管口径不足指数", rawDigits: 4 },
+    TLTI: { name: "Tracheal Long–Thin Index", rawDigits: 4 },
+    TLHI: { name: "Tracheal Length-to-Height Index", rawDigits: 4 },
+    TCDI: { name: "Tracheal Caliber Deficit Index", rawDigits: 4 },
   };
   const GROUP_META = {
-    Low: { zh: "低位", riskZh: "低风险", range: "TRACE score 0–2" },
-    Intermediate: { zh: "中间位", riskZh: "中风险", range: "TRACE score 3–4" },
-    High: { zh: "高位", riskZh: "高风险", range: "TRACE score 5–6" },
+    Low: { label: "Lower tail", riskLabel: "Low risk", range: "TRACE score 0–2" },
+    Intermediate: { label: "Middle range", riskLabel: "Intermediate risk", range: "TRACE score 3–4" },
+    High: { label: "Upper tail", riskLabel: "High risk", range: "TRACE score 5–6" },
   };
 
   function formatPercentile(value) {
@@ -37,20 +38,20 @@
             <h3 class="phenotype-title">${item.name}</h3>
             <span class="phenotype-name">${meta.name}</span>
           </div>
-          <span class="group-badge group-${item.group}">${group.zh}</span>
+          <span class="group-badge group-${item.group}">${group.label}</span>
         </div>
         <div class="phenotype-metrics">
-          <div><span>原始表型值</span><strong>${item.raw.toFixed(meta.rawDigits)}</strong></div>
+          <div><span>Raw phenotype</span><strong>${item.raw.toFixed(meta.rawDigits)}</strong></div>
           <div><span>Winsorized Z-score</span><strong>${item.z.toFixed(3)}</strong></div>
         </div>
         <div class="percentile-row">
-          <span>Discovery 相对百分位</span>
+          <span>Discovery percentile</span>
           <strong>${formatPercentile(item.percentile)}</strong>
         </div>
-        <div class="percentile-track" aria-label="${item.name} 百分位 ${formatPercentile(item.percentile)}">
+        <div class="percentile-track" aria-label="${item.name} percentile ${formatPercentile(item.percentile)}">
           <i style="width:${width}%"></i>
         </div>
-        <p class="points">tail10 分值 <strong>+${item.score}</strong></p>
+        <p class="points">tail10 points <strong>+${item.score}</strong></p>
       </article>`;
   }
 
@@ -77,13 +78,14 @@
   function render(calculation) {
     const riskMeta = GROUP_META[calculation.riskGroup];
     document.getElementById("score-value").textContent = calculation.score;
-    document.getElementById("risk-value").textContent = riskMeta.riskZh;
+    document.getElementById("risk-value").textContent = riskMeta.riskLabel;
     document.getElementById("risk-range").textContent = riskMeta.range;
     phenotypeGrid.innerHTML = ["TLTI", "TLHI", "TCDI"]
       .map((name) => phenotypeCard(calculation.phenotypes[name]))
       .join("");
     document.getElementById("score-marker").style.left = `${((calculation.score + 0.5) / 7) * 100}%`;
     preResult.hidden = true;
+    calculatorLayout.classList.add("has-results");
     results.hidden = false;
   }
 
@@ -91,7 +93,7 @@
     event.preventDefault();
     clearError();
     if (!form.checkValidity()) {
-      showError("请填写全部四项测量值，并确认每项均大于 0。");
+      showError("Complete all four measurements and make sure every value is greater than 0.");
       form.reportValidity();
       return;
     }
@@ -102,9 +104,10 @@
       );
       render(calculation);
     } catch (error) {
-      showError(error instanceof Error ? error.message : "计算失败，请检查输入。");
+      showError(error instanceof Error ? error.message : "Calculation failed. Check your entries and try again.");
       results.hidden = true;
       preResult.hidden = false;
+      calculatorLayout.classList.remove("has-results");
     }
   });
 
@@ -113,10 +116,11 @@
       clearError();
       results.hidden = true;
       preResult.hidden = false;
+      calculatorLayout.classList.remove("has-results");
     }, 0);
   });
 
   volumeUnit.addEventListener("change", function () {
-    volumeInput.placeholder = volumeUnit.value === "mm3" ? "例如 3854105" : "例如 3854";
+    volumeInput.placeholder = volumeUnit.value === "mm3" ? "e.g. 3854105" : "e.g. 3854";
   });
 })();

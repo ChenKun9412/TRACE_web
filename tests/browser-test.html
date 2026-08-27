@@ -1,10 +1,30 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head><meta charset="utf-8"><title>TRACE browser test</title></head>
   <body data-status="RUNNING">
     <pre id="output">RUNNING</pre>
+    <div class="calculator-layout">
+      <form id="trace-form">
+        <input id="trachea-length" required>
+        <input id="trachea-radius" required>
+        <input id="lung-volume" required>
+        <select id="lung-volume-unit"><option value="ml">mL</option></select>
+        <input id="height" required>
+        <button type="submit">Calculate</button>
+      </form>
+      <aside id="pre-result">Preview</aside>
+    </div>
+    <p id="form-error" hidden></p>
+    <section id="results" hidden>
+      <span id="score-value"></span>
+      <span id="risk-value"></span>
+      <span id="risk-range"></span>
+      <div id="phenotype-grid"></div>
+      <i id="score-marker"></i>
+    </section>
     <script src="../assets/reference-data.js"></script>
     <script src="../assets/calculator.js"></script>
+    <script src="../assets/app.js"></script>
     <script>
       (function () {
         const output = document.getElementById("output");
@@ -41,8 +61,20 @@
             Math.abs(median.phenotypes.TLTI.raw - Math.log(76.393482 / 6.366434)) < 1e-12,
             "TLTI formula failed",
           );
+
+          document.getElementById("trachea-length").value = 76.393482;
+          document.getElementById("trachea-radius").value = 6.366434;
+          document.getElementById("lung-volume").value = 3773.749;
+          document.getElementById("height").value = 163;
+          document.getElementById("trace-form").requestSubmit();
+          assert(!document.getElementById("results").hidden, "results did not render");
+          assert(document.getElementById("pre-result").hidden, "preview was not hidden");
+          assert(document.querySelector(".calculator-layout").classList.contains("has-results"), "result layout class missing");
+          assert(document.getElementById("score-value").textContent === "3", "rendered score failed");
+          assert(document.getElementById("risk-value").textContent === "Intermediate risk", "rendered risk label failed");
+          assert(!/[\u3400-\u9fff]/.test(document.getElementById("phenotype-grid").textContent), "dynamic interface contains Chinese text");
           document.body.dataset.status = "PASS";
-          output.textContent = "PASS: browser calculator assertions completed";
+          output.textContent = "PASS: browser calculator and interface assertions completed";
         } catch (error) {
           document.body.dataset.status = "FAIL";
           output.textContent = `FAIL: ${error.message}`;

@@ -1,29 +1,28 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="基于温岭 Discovery 队列固定参数计算 TLTI、TLHI、TCDI 表型及 TRACE 风险分组。"
+      content="Calculate TLTI, TLHI, TCDI phenotypes and TRACE risk groups using fixed parameters from the Wenling Discovery cohort."
     />
     <meta name="theme-color" content="#123d3a" />
-    <title>TRACE 表型与风险分组计算器</title>
+    <title>TRACE Phenotype &amp; Risk Stratification Calculator</title>
     <link rel="stylesheet" href="assets/styles.css" />
   </head>
   <body>
     <div class="page-shell">
       <header class="site-header">
-        <a class="brand" href="#top" aria-label="TRACE 首页">
+        <a class="brand" href="#top" aria-label="TRACE home">
           <span class="brand-mark" aria-hidden="true">T</span>
           <span>
             <strong>TRACE</strong>
             <small>Tracheal phenotype calculator</small>
           </span>
         </a>
-        <nav aria-label="页面导航">
-          <a href="#calculator">开始计算</a>
-          <a href="#method">计算方法</a>
+        <nav aria-label="Page navigation">
+          <a href="#calculator">Calculator</a>
         </nav>
       </header>
 
@@ -31,21 +30,22 @@
         <section class="hero" aria-labelledby="hero-title">
           <div class="hero-copy">
             <p class="eyebrow">RESEARCH CALCULATOR · DISCOVERY COHORT</p>
-            <h1 id="hero-title">从气管与肺几何特征，得到 TRACE 风险分层</h1>
+            <h1 id="hero-title">From airway and lung geometry to TRACE risk stratification</h1>
             <p class="hero-lead">
-              输入四项测量值，即时计算三种气管表型、温岭 Discovery
-              队列中的相对百分位、TRACE score 以及低、中、高风险组。
+              Enter four measurements to calculate three tracheal phenotypes,
+              their relative percentiles in the Wenling Discovery cohort,
+              the TRACE score, and the corresponding risk group.
             </p>
-            <a class="primary-link" href="#calculator">输入测量值 <span aria-hidden="true">↓</span></a>
+            <a class="primary-link" href="#calculator">Enter measurements <span aria-hidden="true">↓</span></a>
           </div>
-          <aside class="reference-card" aria-label="参考队列信息">
-            <span class="reference-label">固定参考</span>
+          <aside class="reference-card" aria-label="Reference cohort information">
+            <span class="reference-label">FIXED REFERENCE</span>
             <strong>42,796</strong>
-            <p>温岭 Discovery 全人群</p>
+            <p>Wenling Discovery cohort</p>
             <dl>
-              <div><dt>分组方案</dt><dd>tail10</dd></div>
-              <div><dt>TRACE score</dt><dd>0–6 分</dd></div>
-              <div><dt>计算方式</dt><dd>浏览器本地完成</dd></div>
+              <div><dt>Tail scheme</dt><dd>tail10</dd></div>
+              <div><dt>TRACE score</dt><dd>0–6 points</dd></div>
+              <div><dt>Processing</dt><dd>In your browser</dd></div>
             </dl>
           </aside>
         </section>
@@ -53,15 +53,15 @@
         <section class="calculator-section" id="calculator" aria-labelledby="calculator-title">
           <div class="section-heading">
             <p class="eyebrow">CALCULATOR</p>
-            <h2 id="calculator-title">输入测量值</h2>
-            <p>所有字段均为必填。请特别核对单位，单位错误会显著改变结果。</p>
+            <h2 id="calculator-title">Enter measurements</h2>
+            <p>All fields are required. Check each unit carefully, as incorrect units will materially change the result.</p>
           </div>
 
           <div class="calculator-layout">
             <form class="input-card" id="trace-form" novalidate>
               <div class="field-grid">
                 <label class="field">
-                  <span>气管长度 <b>mm</b></span>
+                  <span>Tracheal length <b>mm</b></span>
                   <input
                     id="trachea-length"
                     name="tracheaLengthMm"
@@ -69,12 +69,12 @@
                     min="0"
                     step="any"
                     inputmode="decimal"
-                    placeholder="例如 76.4"
+                    placeholder="e.g. 76.4"
                     required
                   />
                 </label>
                 <label class="field">
-                  <span>气管平均半径 <b>mm</b></span>
+                  <span>Mean tracheal radius <b>mm</b></span>
                   <input
                     id="trachea-radius"
                     name="tracheaRadiusMm"
@@ -82,12 +82,12 @@
                     min="0"
                     step="any"
                     inputmode="decimal"
-                    placeholder="例如 6.4"
+                    placeholder="e.g. 6.4"
                     required
                   />
                 </label>
                 <label class="field">
-                  <span>双肺总体积</span>
+                  <span>Total lung volume</span>
                   <span class="volume-control">
                     <input
                       id="lung-volume"
@@ -96,17 +96,17 @@
                       min="0"
                       step="any"
                       inputmode="decimal"
-                      placeholder="例如 3854"
+                      placeholder="e.g. 3854"
                       required
                     />
-                    <select id="lung-volume-unit" name="lungVolumeUnit" aria-label="肺体积单位">
+                    <select id="lung-volume-unit" name="lungVolumeUnit" aria-label="Lung volume unit">
                       <option value="ml">mL</option>
                       <option value="mm3">mm³</option>
                     </select>
                   </span>
                 </label>
                 <label class="field">
-                  <span>身高 <b>cm</b></span>
+                  <span>Height <b>cm</b></span>
                   <input
                     id="height"
                     name="heightCm"
@@ -114,7 +114,7 @@
                     min="0"
                     step="any"
                     inputmode="decimal"
-                    placeholder="例如 163"
+                    placeholder="e.g. 163"
                     required
                   />
                 </label>
@@ -122,19 +122,19 @@
 
               <p class="privacy-note">
                 <span aria-hidden="true">✓</span>
-                输入只在当前浏览器中计算，不会上传或保存。
+                Your entries are processed locally and are never uploaded or stored.
               </p>
               <div class="form-actions">
-                <button class="primary-button" type="submit">计算 TRACE 结果</button>
-                <button class="text-button" type="reset">清空</button>
+                <button class="primary-button" type="submit">Calculate TRACE score</button>
+                <button class="text-button" type="reset">Clear</button>
               </div>
               <p class="form-error" id="form-error" role="alert" hidden></p>
             </form>
 
-            <aside class="pre-result" id="pre-result" aria-label="结果说明">
+            <aside class="pre-result" id="pre-result" aria-label="Result preview">
               <div class="pre-result-icon" aria-hidden="true">∿</div>
-              <h3>结果将在这里显示</h3>
-              <p>包括三个表型的原始值、Z-score、近似百分位、tail10 分组与分值。</p>
+              <h3>Your result will appear here</h3>
+              <p>See each phenotype's raw value, Z-score, approximate percentile, tail10 group, and points.</p>
             </aside>
           </div>
 
@@ -143,13 +143,13 @@
               <div>
                 <p class="eyebrow">YOUR TRACE RESULT</p>
                 <h2>TRACE score</h2>
-                <p class="result-caption">三个 tail10 表型分值之和</p>
+                <p class="result-caption">Sum of the three tail10 phenotype points</p>
               </div>
               <div class="score-display" aria-label="TRACE score">
                 <strong id="score-value">—</strong><span>/ 6</span>
               </div>
               <div class="risk-display">
-                <span>风险分组</span>
+                <span>RISK GROUP</span>
                 <strong id="risk-value">—</strong>
                 <small id="risk-range">—</small>
               </div>
@@ -157,8 +157,8 @@
 
             <div class="phenotype-grid" id="phenotype-grid"></div>
 
-            <div class="score-strip" aria-label="TRACE score 风险区间">
-              <div class="strip-labels"><span>低风险 0–2</span><span>中风险 3–4</span><span>高风险 5–6</span></div>
+            <div class="score-strip" aria-label="TRACE score risk ranges">
+              <div class="strip-labels"><span>Low risk 0–2</span><span>Intermediate risk 3–4</span><span>High risk 5–6</span></div>
               <div class="strip-track">
                 <span class="strip-low"></span><span class="strip-intermediate"></span><span class="strip-high"></span>
                 <i id="score-marker" aria-hidden="true"></i>
@@ -167,43 +167,11 @@
           </section>
         </section>
 
-        <section class="method-section" id="method" aria-labelledby="method-title">
-          <div class="section-heading">
-            <p class="eyebrow">METHOD</p>
-            <h2 id="method-title">结果是怎样计算的？</h2>
-          </div>
-          <div class="method-grid">
-            <article>
-              <span class="method-number">01</span>
-              <h3>计算三个原始表型</h3>
-              <p><b>TLTI</b> = ln（气管长度 / 平均半径）</p>
-              <p><b>TLHI</b> = ln（气管长度 / 身高）</p>
-              <p><b>TCDI</b> = ln（肺体积 / 平均半径）</p>
-            </article>
-            <article>
-              <span class="method-number">02</span>
-              <h3>固定标准化与 tail10 分组</h3>
-              <p>使用温岭 Discovery 全人群的 1%/99% Winsor 参数、均值、标准差及固定 10%/90% 阈值。</p>
-            </article>
-            <article>
-              <span class="method-number">03</span>
-              <h3>生成 TRACE score</h3>
-              <p>每个表型 Low=0、Intermediate=1、High=2；三项相加后按 0–2、3–4、5–6 分层。</p>
-            </article>
-          </div>
-          <div class="interpretation-note">
-            <strong>如何理解百分位？</strong>
-            <p>
-              百分位是当前原始表型在 Discovery 参考分布中的相对位置，采用 0.1
-              百分点分位网格近似计算。它不是肺癌发生概率，也不能替代临床诊断。
-            </p>
-          </div>
-        </section>
       </main>
 
       <footer>
         <p><strong>TRACE Research Calculator</strong> · For research use only</p>
-        <p>基于温岭 Discovery 全人群固定参数；页面不收集输入信息。</p>
+        <p>Percentiles indicate relative position, not lung cancer probability. This tool does not replace clinical evaluation.</p>
       </footer>
     </div>
 

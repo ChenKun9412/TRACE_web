@@ -8,23 +8,23 @@
   "use strict";
 
   const FIELD_LABELS = {
-    tracheaLengthMm: "气管长度",
-    tracheaRadiusMm: "气管平均半径",
-    lungVolumeMl: "双肺总体积",
-    heightCm: "身高",
+    tracheaLengthMm: "Tracheal length",
+    tracheaRadiusMm: "Mean tracheal radius",
+    lungVolumeMl: "Total lung volume",
+    heightCm: "Height",
   };
 
   function positiveNumber(value, field) {
     const number = Number(value);
     if (!Number.isFinite(number) || number <= 0) {
-      throw new Error(`${FIELD_LABELS[field]}必须是大于 0 的有效数字。`);
+      throw new Error(`${FIELD_LABELS[field]} must be a valid number greater than 0.`);
     }
     return number;
   }
 
   function estimatePercentile(value, quantiles, step) {
     if (!Array.isArray(quantiles) || quantiles.length < 2) {
-      throw new Error("百分位参考数据不可用。");
+      throw new Error("The percentile reference data are unavailable.");
     }
     if (value <= quantiles[0]) return 0;
     const lastIndex = quantiles.length - 1;
@@ -49,7 +49,7 @@
 
   function phenotypeResult(name, raw, reference) {
     const parameters = reference.phenotypes[name];
-    if (!parameters) throw new Error(`缺少 ${name} 参考参数。`);
+    if (!parameters) throw new Error(`Reference parameters for ${name} are missing.`);
     const winsorizedRaw = Math.max(
       parameters.winsorLowerRaw,
       Math.min(parameters.winsorUpperRaw, raw),
@@ -82,12 +82,12 @@
     for (const [group, bounds] of Object.entries(reference.score.riskGroups)) {
       if (score >= bounds.min && score <= bounds.max) return group;
     }
-    throw new Error("TRACE score 超出 0–6 分范围。");
+    throw new Error("The TRACE score is outside the expected 0–6 range.");
   }
 
   function calculate(inputs, reference) {
     if (!reference || !reference.phenotypes || !reference.score) {
-      throw new Error("TRACE Discovery 参考参数尚未载入。");
+      throw new Error("The TRACE Discovery reference parameters have not loaded.");
     }
     const length = positiveNumber(inputs.tracheaLengthMm, "tracheaLengthMm");
     const radius = positiveNumber(inputs.tracheaRadiusMm, "tracheaRadiusMm");

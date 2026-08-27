@@ -19,10 +19,10 @@ python -m http.server 8000
 
 ## 参考数据生成与验证
 
-网页发布的是固定参数和每 0.1 百分点一个值的聚合分位网格，不包含 SID、结局或患者级输入记录。源数据更新后，在项目根目录执行：
+网页发布的是固定参数和每 0.1 百分点一个值的聚合分位网格，不包含 SID、结局或患者级输入记录。源数据更新后，在本目录执行（默认从相邻的 `TRACE_TLDH` 目录读取源数据）：
 
 ```bash
-/home/chenkun/miniconda3/envs/hlbp/bin/python TRACE_web/scripts/build_reference_data.py
+/home/chenkun/miniconda3/envs/hlbp/bin/python scripts/build_reference_data.py
 ```
 
 脚本会重建 `assets/reference-data.js`，并将全量回算结果保存到 `validation/reference-build-report.json`。只有三个表型公式、Z-score、tail10 分组和 TRACE score 全部通过一致性检查时才会生成网页参考数据。

@@ -48,7 +48,7 @@ assert.equal(high.riskGroup, "High");
 
 assert.throws(
   () => calculator.calculate({ ...medianLike, heightCm: 0 }, reference),
-  /身高必须是大于 0/,
+  /Height must be a valid number greater than 0/,
 );
 assert.equal(calculator.estimatePercentile(-Infinity, [1, 2, 3], 0.5), 0);
 assert.equal(calculator.estimatePercentile(Infinity, [1, 2, 3], 0.5), 100);

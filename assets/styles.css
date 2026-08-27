@@ -11,7 +11,7 @@
   --shadow: 0 24px 70px rgba(31, 61, 57, 0.12);
   color-scheme: light;
   font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    Arial, sans-serif;
   font-synthesis: none;
 }
 
@@ -72,10 +72,10 @@ nav a:hover, nav a:focus-visible { color: var(--forest); }
 .hero {
   width: min(1120px, calc(100% - 40px));
   margin: 0 auto;
-  padding: 92px 0 94px;
+  padding: 72px 0 76px;
   display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.7fr);
-  gap: 80px;
+  grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.68fr);
+  gap: 64px;
   align-items: center;
 }
 
@@ -90,12 +90,12 @@ nav a:hover, nav a:focus-visible { color: var(--forest); }
 h1, h2, h3, p { margin-top: 0; }
 
 h1 {
-  max-width: 760px;
+  max-width: 780px;
   margin-bottom: 24px;
-  font-family: Georgia, "Noto Serif SC", serif;
-  font-size: clamp(42px, 5.5vw, 72px);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(42px, 5vw, 68px);
   font-weight: 500;
-  line-height: 1.08;
+  line-height: 1.04;
   letter-spacing: -0.035em;
 }
 
@@ -104,7 +104,7 @@ h1 {
   margin-bottom: 34px;
   color: var(--muted);
   font-size: 17px;
-  line-height: 1.8;
+  line-height: 1.7;
 }
 
 .primary-link {
@@ -165,17 +165,21 @@ h1 {
 .reference-card dd { margin: 0; font-size: 12px; font-weight: 700; }
 
 .calculator-section {
-  padding: 86px max(20px, calc((100% - 1120px) / 2)) 100px;
+  padding: 72px max(20px, calc((100% - 1120px) / 2)) 82px;
   background: #fbfaf6;
   border-top: 1px solid rgba(23, 48, 46, 0.08);
   border-bottom: 1px solid rgba(23, 48, 46, 0.08);
 }
 
-.section-heading { max-width: 680px; margin-bottom: 35px; }
-.section-heading h2 { margin-bottom: 10px; font-family: Georgia, "Noto Serif SC", serif; font-size: clamp(31px, 4vw, 46px); font-weight: 500; }
+.section-heading { max-width: 760px; margin-bottom: 31px; }
+.section-heading h2 { margin-bottom: 10px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(31px, 4vw, 46px); font-weight: 500; }
 .section-heading > p:last-child { color: var(--muted); line-height: 1.7; }
 
 .calculator-layout { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(260px, .75fr); gap: 22px; align-items: stretch; }
+.calculator-layout.has-results { grid-template-columns: 1fr; }
+.calculator-layout.has-results .input-card { padding: 28px 30px; }
+.calculator-layout.has-results .field-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.calculator-layout.has-results .privacy-note { margin: 22px 0 16px; }
 .input-card, .pre-result { border: 1px solid var(--line); background: var(--card); }
 .input-card { padding: 34px; border-radius: 20px; box-shadow: 0 12px 40px rgba(35, 64, 60, .06); }
 .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px 22px; }
@@ -213,7 +217,7 @@ input::placeholder { color: #a4afac; }
 .pre-result h3 { margin-bottom: 8px; font-family: Georgia, serif; font-size: 22px; font-weight: 500; }
 .pre-result p { max-width: 280px; margin-bottom: 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
 
-.results { margin-top: 24px; }
+.results { margin-top: 20px; }
 .result-summary { display: grid; grid-template-columns: 1fr auto minmax(180px, .45fr); align-items: center; gap: 38px; padding: 30px 34px; border-radius: 20px 20px 6px 20px; color: white; background: var(--forest); box-shadow: var(--shadow); }
 .result-summary .eyebrow { margin-bottom: 10px; color: #b7cbc5; }
 .result-summary h2 { margin-bottom: 4px; font-family: Georgia, serif; font-size: 30px; font-weight: 500; }
@@ -257,44 +261,33 @@ input::placeholder { color: #a4afac; }
 .strip-high { border-radius: 2px 99px 99px 2px; background: #c77c73; }
 .strip-track i { position: absolute; top: -6px; width: 3px; height: 23px; border-radius: 9px; background: var(--ink); transform: translateX(-50%); transition: left .35s ease; }
 
-.method-section { width: min(1120px, calc(100% - 40px)); margin: 0 auto; padding: 96px 0; }
-.method-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-.method-grid article { padding: 28px; border-top: 2px solid var(--forest); background: rgba(255,255,255,.45); }
-.method-number { color: #74908c; font-family: Georgia, serif; font-size: 13px; }
-.method-grid h3 { margin: 25px 0 15px; font-family: Georgia, "Noto Serif SC", serif; font-size: 21px; font-weight: 500; }
-.method-grid p { margin-bottom: 8px; color: var(--muted); font-size: 13px; line-height: 1.7; }
-.method-grid b { color: var(--ink); }
-.interpretation-note { display: grid; grid-template-columns: 190px 1fr; gap: 30px; margin-top: 22px; padding: 25px 28px; border: 1px solid #e1d3b7; background: #f8efd9; }
-.interpretation-note p { margin: 0; color: #645b49; font-size: 13px; line-height: 1.7; }
-
-footer { width: min(1120px, calc(100% - 40px)); margin: 0 auto; padding: 26px 0 38px; display: flex; justify-content: space-between; gap: 30px; border-top: 1px solid rgba(23,48,46,.12); color: var(--muted); font-size: 11px; }
+footer { width: min(1120px, calc(100% - 40px)); margin: 0 auto; padding: 30px 0 38px; display: flex; justify-content: space-between; gap: 30px; color: var(--muted); font-size: 11px; }
 footer p { margin: 0; }
 
 @media (max-width: 850px) {
   .hero { grid-template-columns: 1fr; gap: 48px; padding-top: 70px; }
   .reference-card { max-width: 480px; }
   .calculator-layout { grid-template-columns: 1fr; }
+  .calculator-layout.has-results .field-grid { grid-template-columns: 1fr 1fr; }
   .pre-result { min-height: 220px; }
   .result-summary { grid-template-columns: 1fr auto; }
   .risk-display { grid-column: 1 / -1; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.16); }
   .phenotype-grid { grid-template-columns: 1fr; }
-  .method-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 560px) {
   .site-header { min-height: 76px; }
-  nav a:last-child { display: none; }
   .brand small { display: none; }
   h1 { font-size: 40px; }
   .hero { padding: 58px 0 70px; }
   .calculator-section { padding-top: 70px; }
   .field-grid { grid-template-columns: 1fr; }
+  .calculator-layout.has-results .field-grid { grid-template-columns: 1fr; }
   .input-card { padding: 24px 20px; }
   .result-summary { gap: 20px; padding: 26px 22px; }
   .score-display { padding: 0 0 0 20px; border-right: 0; }
   .score-display strong { font-size: 52px; }
   .score-strip { padding-inline: 10px; }
-  .interpretation-note { grid-template-columns: 1fr; gap: 10px; }
   footer { flex-direction: column; gap: 8px; }
 }
 

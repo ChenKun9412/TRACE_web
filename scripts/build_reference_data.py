@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 
 import numpy as np
@@ -17,7 +18,9 @@ import pandas as pd
 
 
 WEB_DIR = Path(__file__).resolve().parent.parent
-PROJECT_DIR = WEB_DIR.parent
+PROJECT_DIR = Path(
+    os.environ.get("TRACE_SOURCE_PROJECT_DIR", WEB_DIR.parent / "TRACE_TLDH")
+).resolve()
 INPUT_CSV = PROJECT_DIR / "datasets/input_data/wenling_all_with_subgroup_tail.csv"
 SUMMARY_FILE = (
     PROJECT_DIR
