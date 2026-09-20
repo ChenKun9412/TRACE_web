@@ -43,58 +43,13 @@
           <div class="section-heading">
             <p class="eyebrow">CALCULATOR</p>
             <h2 id="calculator-title">Enter measurements</h2>
-            <p>All fields are required. Check each unit carefully, as incorrect units will materially change the result.</p>
+            <p>Height is always required. Then enter the airway measurements manually or load them from a feature file.</p>
           </div>
 
           <form class="input-card" id="trace-form" novalidate>
-            <div class="field-grid">
+            <div class="height-row">
               <label class="field">
-                <span>Tracheal length <b>mm</b></span>
-                <input
-                  id="trachea-length"
-                  name="tracheaLengthMm"
-                  type="number"
-                  min="0"
-                  step="any"
-                  inputmode="decimal"
-                  placeholder="e.g. 76.4"
-                  required
-                />
-              </label>
-              <label class="field">
-                <span>Mean tracheal radius <b>mm</b></span>
-                <input
-                  id="trachea-radius"
-                  name="tracheaRadiusMm"
-                  type="number"
-                  min="0"
-                  step="any"
-                  inputmode="decimal"
-                  placeholder="e.g. 6.4"
-                  required
-                />
-              </label>
-              <label class="field">
-                <span>Total lung volume</span>
-                <span class="volume-control">
-                  <input
-                    id="lung-volume"
-                    name="lungVolume"
-                    type="number"
-                    min="0"
-                    step="any"
-                    inputmode="decimal"
-                    placeholder="e.g. 3854"
-                    required
-                  />
-                  <select id="lung-volume-unit" name="lungVolumeUnit" aria-label="Lung volume unit">
-                    <option value="ml">mL</option>
-                    <option value="mm3">mm³</option>
-                  </select>
-                </span>
-              </label>
-              <label class="field">
-                <span>Height <b>cm</b></span>
+                <span>Height <b>cm · required</b></span>
                 <input
                   id="height"
                   name="heightCm"
@@ -108,9 +63,97 @@
               </label>
             </div>
 
+            <fieldset class="source-selector">
+              <legend>Measurement input</legend>
+              <div class="source-options">
+                <label class="source-option">
+                  <input type="radio" name="inputSource" value="manual" checked />
+                  <span><strong>Enter measurements</strong><small>Type lung and tracheal measurements</small></span>
+                </label>
+                <label class="source-option">
+                  <input type="radio" name="inputSource" value="file" />
+                  <span><strong>Use a feature file</strong><small>Load one subject from CSV, TSV, or JSON</small></span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="input-panel" id="manual-panel">
+              <div class="field-grid">
+                <label class="field">
+                  <span>Total lung volume</span>
+                  <span class="volume-control">
+                    <input
+                      id="lung-volume"
+                      name="lungVolume"
+                      type="number"
+                      min="0"
+                      step="any"
+                      inputmode="decimal"
+                      placeholder="e.g. 3854"
+                      required
+                    />
+                    <select id="lung-volume-unit" name="lungVolumeUnit" aria-label="Lung volume unit">
+                      <option value="ml">mL</option>
+                      <option value="mm3">mm³</option>
+                    </select>
+                  </span>
+                </label>
+                <label class="field">
+                  <span>Tracheal length <b>mm</b></span>
+                  <input
+                    id="trachea-length"
+                    name="tracheaLengthMm"
+                    type="number"
+                    min="0"
+                    step="any"
+                    inputmode="decimal"
+                    placeholder="e.g. 76.4"
+                    required
+                  />
+                </label>
+                <label class="field">
+                  <span>Mean tracheal radius <b>mm</b></span>
+                  <input
+                    id="trachea-radius"
+                    name="tracheaRadiusMm"
+                    type="number"
+                    min="0"
+                    step="any"
+                    inputmode="decimal"
+                    placeholder="e.g. 6.4"
+                    required
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div class="input-panel file-panel" id="file-panel" hidden>
+              <label class="field file-field">
+                <span>Feature file <b>CSV, TSV, or JSON</b></span>
+                <input
+                  id="feature-file"
+                  name="featureFile"
+                  type="file"
+                  accept=".csv,.tsv,.txt,.json,text/csv,text/tab-separated-values,application/json"
+                  disabled
+                />
+              </label>
+              <p class="file-help">
+                The file must contain exactly one record with
+                <code>trachea_length</code> (mm), <code>trachea_radius_avg</code> (mm), and
+                <code>total_lung_volume_mm3</code> (mm³).
+              </p>
+              <dl class="file-preview" id="file-preview" hidden>
+                <div><dt>File</dt><dd id="feature-file-name">—</dd></div>
+                <div><dt>Lung volume</dt><dd id="feature-volume">—</dd></div>
+                <div><dt>Tracheal length</dt><dd id="feature-length">—</dd></div>
+                <div><dt>Mean tracheal radius</dt><dd id="feature-radius">—</dd></div>
+              </dl>
+            </div>
+
             <p class="privacy-note">
               <span aria-hidden="true">✓</span>
-              Your entries are processed locally and are never uploaded or stored.
+              Your entries and feature file are processed locally and are never uploaded or stored.
             </p>
             <div class="form-actions">
               <button class="primary-button" type="submit">Calculate TRACE score</button>

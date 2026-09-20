@@ -4,11 +4,24 @@
   <body data-status="RUNNING">
     <pre id="output">RUNNING</pre>
     <form id="trace-form">
-      <input id="trachea-length" required>
-      <input id="trachea-radius" required>
-      <input id="lung-volume" required>
-      <select id="lung-volume-unit"><option value="ml">mL</option></select>
       <input id="height" required>
+      <label><input type="radio" name="inputSource" value="manual" checked>Manual</label>
+      <label><input type="radio" name="inputSource" value="file">File</label>
+      <div id="manual-panel">
+        <input id="trachea-length" required>
+        <input id="trachea-radius" required>
+        <input id="lung-volume" required>
+        <select id="lung-volume-unit"><option value="ml">mL</option></select>
+      </div>
+      <div id="file-panel" hidden>
+        <input id="feature-file" type="file" disabled>
+        <dl id="file-preview" hidden>
+          <div><dd id="feature-file-name"></dd></div>
+          <div><dd id="feature-volume"></dd></div>
+          <div><dd id="feature-length"></dd></div>
+          <div><dd id="feature-radius"></dd></div>
+        </dl>
+      </div>
       <button type="submit">Calculate</button>
     </form>
     <p id="form-error" hidden></p>
@@ -23,10 +36,17 @@
     <script src="../assets/calculator.js"></script>
     <script src="../assets/app.js"></script>
     <script>
-      (function () {
+      (async function () {
         const output = document.getElementById("output");
         function assert(condition, message) {
           if (!condition) throw new Error(message);
+        }
+        async function waitFor(condition, message) {
+          for (let attempt = 0; attempt < 100; attempt += 1) {
+            if (condition()) return;
+            await new Promise((resolve) => window.setTimeout(resolve, 10));
+          }
+          throw new Error(message);
         }
         try {
           const median = TRACECalculator.calculate({
@@ -59,11 +79,61 @@
             "TLTI formula failed",
           );
 
+          const parsed = TRACECalculator.parseFeatureFile(
+            "trachea_length,trachea_radius_avg,total_lung_volume_mm3\n76.393482,6.366434,3773749",
+            "features.csv",
+          );
+          assert(parsed.lungVolumeMl === 3773.749, "feature-file volume conversion failed");
+          const parsedJson = TRACECalculator.parseFeatureFile(JSON.stringify({
+            trachea_length: 76.393482,
+            trachea_radius_avg: 6.366434,
+            total_lung_volume_mm3: 3773749,
+          }), "features.json");
+          assert(parsedJson.tracheaLengthMm === parsed.tracheaLengthMm, "JSON feature parsing failed");
+          let multipleRowsRejected = false;
+          try {
+            TRACECalculator.parseFeatureFile(
+              "trachea_length,trachea_radius_avg,total_lung_volume_mm3\n76,6,3700000\n77,7,3800000",
+              "features.csv",
+            );
+          } catch (error) {
+            multipleRowsRejected = /exactly one subject record/.test(error.message);
+          }
+          assert(multipleRowsRejected, "multiple feature records were not rejected");
+
+          const fileRadio = document.querySelector('input[name="inputSource"][value="file"]');
+          fileRadio.checked = true;
+          fileRadio.dispatchEvent(new Event("change"));
+          assert(document.getElementById("manual-panel").hidden, "manual panel did not hide");
+          assert(!document.getElementById("file-panel").hidden, "file panel did not show");
+          assert(document.getElementById("feature-file").required, "feature file is not required in file mode");
+
+          const featureFile = new File([
+            "trachea_length,trachea_radius_avg,total_lung_volume_mm3\n76.393482,6.366434,3773749",
+          ], "features.csv", { type: "text/csv" });
+          const fileTransfer = new DataTransfer();
+          fileTransfer.items.add(featureFile);
+          document.getElementById("feature-file").files = fileTransfer.files;
+          document.getElementById("feature-file").dispatchEvent(new Event("change"));
+          document.getElementById("height").value = 163;
+          await waitFor(
+            () => !document.getElementById("file-preview").hidden,
+            "feature preview did not render",
+          );
+          document.getElementById("trace-form").requestSubmit();
+          await new Promise((resolve) => window.setTimeout(resolve, 0));
+          assert(document.getElementById("score-value").textContent === "3", "file-mode score failed");
+
+          const manualRadio = document.querySelector('input[name="inputSource"][value="manual"]');
+          manualRadio.checked = true;
+          manualRadio.dispatchEvent(new Event("change"));
+
           document.getElementById("trachea-length").value = 76.393482;
           document.getElementById("trachea-radius").value = 6.366434;
           document.getElementById("lung-volume").value = 3773.749;
           document.getElementById("height").value = 163;
           document.getElementById("trace-form").requestSubmit();
+          await new Promise((resolve) => window.setTimeout(resolve, 0));
           assert(!document.getElementById("results").hidden, "results did not render");
           assert(document.getElementById("score-value").textContent === "3", "rendered score failed");
           assert(document.getElementById("risk-value").textContent === "Intermediate risk", "rendered risk label failed");

@@ -50,6 +50,38 @@ assert.throws(
   () => calculator.calculate({ ...medianLike, heightCm: 0 }, reference),
   /Height must be a valid number greater than 0/,
 );
+
+const csvFeature = calculator.parseFeatureFile(
+  "subject_id,trachea_length,trachea_radius_avg,total_lung_volume_mm3\nA001,76.393482,6.366434,3773749",
+  "features.csv",
+);
+assert.deepEqual(csvFeature, {
+  tracheaLengthMm: 76.393482,
+  tracheaRadiusMm: 6.366434,
+  lungVolumeMl: 3773.749,
+});
+const fileResult = calculator.calculate({ ...csvFeature, heightCm: 163 }, reference);
+assert.equal(fileResult.score, result.score);
+assert.equal(fileResult.riskGroup, result.riskGroup);
+
+const jsonFeature = calculator.parseFeatureFile(JSON.stringify({
+  trachea_length: 76.393482,
+  trachea_radius_avg: 6.366434,
+  total_lung_volume_mm3: 3773749,
+}), "features.json");
+assert.deepEqual(jsonFeature, csvFeature);
+
+assert.throws(
+  () => calculator.parseFeatureFile(
+    "trachea_length,trachea_radius_avg,total_lung_volume_mm3\n76,6,3700000\n77,7,3800000",
+    "features.csv",
+  ),
+  /exactly one subject record/,
+);
+assert.throws(
+  () => calculator.parseFeatureFile("trachea_length,trachea_radius_avg\n76,6", "features.csv"),
+  /total_lung_volume_mm3/,
+);
 assert.equal(calculator.estimatePercentile(-Infinity, [1, 2, 3], 0.5), 0);
 assert.equal(calculator.estimatePercentile(Infinity, [1, 2, 3], 0.5), 100);
 

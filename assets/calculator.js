@@ -13,6 +13,11 @@
     lungVolumeMl: "Total lung volume",
     heightCm: "Height",
   };
+  const FEATURE_FIELDS = {
+    trachea_length: "Tracheal length",
+    trachea_radius_avg: "Mean tracheal radius",
+    total_lung_volume_mm3: "Total lung volume",
+  };
 
   function positiveNumber(value, field) {
     const number = Number(value);
@@ -20,6 +25,102 @@
       throw new Error(`${FIELD_LABELS[field]} must be a valid number greater than 0.`);
     }
     return number;
+  }
+
+  function parseDelimitedRows(text, delimiter) {
+    const rows = [];
+    let row = [];
+    let value = "";
+    let quoted = false;
+
+    for (let index = 0; index < text.length; index += 1) {
+      const character = text[index];
+      if (quoted) {
+        if (character === '"' && text[index + 1] === '"') {
+          value += '"';
+          index += 1;
+        } else if (character === '"') {
+          quoted = false;
+        } else {
+          value += character;
+        }
+      } else if (character === '"') {
+        quoted = true;
+      } else if (character === delimiter) {
+        row.push(value.trim());
+        value = "";
+      } else if (character === "\n") {
+        row.push(value.trim());
+        if (row.some((cell) => cell !== "")) rows.push(row);
+        row = [];
+        value = "";
+      } else if (character !== "\r") {
+        value += character;
+      }
+    }
+    if (quoted) throw new Error("The feature file contains an unclosed quoted value.");
+    row.push(value.trim());
+    if (row.some((cell) => cell !== "")) rows.push(row);
+    return rows;
+  }
+
+  function featureRecordFromText(text, fileName) {
+    const cleaned = String(text).replace(/^\uFEFF/, "").trim();
+    if (!cleaned) throw new Error("The selected feature file is empty.");
+
+    const looksLikeJson = /\.json$/i.test(fileName || "") || /^[{\[]/.test(cleaned);
+    if (looksLikeJson) {
+      let parsed;
+      try {
+        parsed = JSON.parse(cleaned);
+      } catch (error) {
+        throw new Error("The feature file is not valid JSON.");
+      }
+      const records = Array.isArray(parsed) ? parsed : [parsed];
+      if (records.length !== 1 || !records[0] || typeof records[0] !== "object" || Array.isArray(records[0])) {
+        throw new Error("The feature file must contain exactly one subject record.");
+      }
+      return records[0];
+    }
+
+    const delimiter = cleaned.split(/\r?\n/, 1)[0].includes("\t") ? "\t" : ",";
+    const rows = parseDelimitedRows(cleaned, delimiter);
+    if (rows.length < 2) {
+      throw new Error("The feature file must contain a header and one subject record.");
+    }
+    if (rows.length !== 2) {
+      throw new Error("The feature file must contain exactly one subject record.");
+    }
+    const headers = rows[0].map((header) => header.trim().toLowerCase());
+    if (new Set(headers).size !== headers.length) {
+      throw new Error("The feature file contains duplicate column names.");
+    }
+    return Object.fromEntries(headers.map((header, index) => [header, rows[1][index]]));
+  }
+
+  function parseFeatureFile(text, fileName = "") {
+    const record = featureRecordFromText(text, fileName);
+    const normalized = Object.fromEntries(
+      Object.entries(record).map(([key, value]) => [String(key).trim().toLowerCase(), value]),
+    );
+    const missing = Object.keys(FEATURE_FIELDS).filter(
+      (field) => normalized[field] === undefined || String(normalized[field]).trim() === "",
+    );
+    if (missing.length) {
+      throw new Error(`Missing required feature field${missing.length === 1 ? "" : "s"}: ${missing.join(", ")}.`);
+    }
+
+    const length = positiveNumber(normalized.trachea_length, "tracheaLengthMm");
+    const radius = positiveNumber(normalized.trachea_radius_avg, "tracheaRadiusMm");
+    const volumeMm3 = Number(normalized.total_lung_volume_mm3);
+    if (!Number.isFinite(volumeMm3) || volumeMm3 <= 0) {
+      throw new Error(`${FEATURE_FIELDS.total_lung_volume_mm3} must be a valid number greater than 0.`);
+    }
+    return {
+      tracheaLengthMm: length,
+      tracheaRadiusMm: radius,
+      lungVolumeMl: volumeMm3 / 1000,
+    };
   }
 
   function estimatePercentile(value, quantiles, step) {
@@ -117,5 +218,5 @@
     };
   }
 
-  return { calculate, estimatePercentile };
+  return { calculate, estimatePercentile, parseFeatureFile };
 });

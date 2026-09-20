@@ -7,6 +7,14 @@
   const phenotypeGrid = document.getElementById("phenotype-grid");
   const volumeInput = document.getElementById("lung-volume");
   const volumeUnit = document.getElementById("lung-volume-unit");
+  const sourceInputs = Array.from(document.querySelectorAll('input[name="inputSource"]'));
+  const manualPanel = document.getElementById("manual-panel");
+  const filePanel = document.getElementById("file-panel");
+  const featureFileInput = document.getElementById("feature-file");
+  const filePreview = document.getElementById("file-preview");
+  const manualInputs = Array.from(manualPanel.querySelectorAll("input, select"));
+  let featureInputs = null;
+  let fileReadPromise = Promise.resolve();
 
   const PHENOTYPE_META = {
     TLTI: { name: "Tracheal Long–Thin Index", rawDigits: 4 },
@@ -63,13 +71,61 @@
     errorBox.hidden = true;
   }
 
+  function selectedSource() {
+    return sourceInputs.find((input) => input.checked)?.value || "manual";
+  }
+
+  function clearFilePreview() {
+    featureInputs = null;
+    filePreview.hidden = true;
+    document.getElementById("feature-file-name").textContent = "—";
+    document.getElementById("feature-volume").textContent = "—";
+    document.getElementById("feature-length").textContent = "—";
+    document.getElementById("feature-radius").textContent = "—";
+  }
+
+  function updateSourcePanels() {
+    const fileMode = selectedSource() === "file";
+    manualPanel.hidden = fileMode;
+    filePanel.hidden = !fileMode;
+    manualInputs.forEach((input) => { input.disabled = fileMode; });
+    featureFileInput.disabled = !fileMode;
+    featureFileInput.required = fileMode;
+    clearError();
+    results.hidden = true;
+  }
+
+  async function loadFeatureFile() {
+    clearFilePreview();
+    clearError();
+    const file = featureFileInput.files && featureFileInput.files[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      if (!featureFileInput.files || featureFileInput.files[0] !== file) return;
+      featureInputs = window.TRACECalculator.parseFeatureFile(text, file.name);
+      document.getElementById("feature-file-name").textContent = file.name;
+      document.getElementById("feature-volume").textContent = `${featureInputs.lungVolumeMl.toLocaleString()} mL`;
+      document.getElementById("feature-length").textContent = `${featureInputs.tracheaLengthMm.toLocaleString()} mm`;
+      document.getElementById("feature-radius").textContent = `${featureInputs.tracheaRadiusMm.toLocaleString()} mm`;
+      filePreview.hidden = false;
+    } catch (error) {
+      showError(error instanceof Error ? error.message : "The feature file could not be read.");
+    }
+  }
+
   function readInputs() {
+    const heightCm = document.getElementById("height").value;
+    if (selectedSource() === "file") {
+      if (!featureInputs) throw new Error("Select a valid feature file before calculating.");
+      return { ...featureInputs, heightCm };
+    }
     const rawVolume = Number(volumeInput.value);
     return {
       tracheaLengthMm: document.getElementById("trachea-length").value,
       tracheaRadiusMm: document.getElementById("trachea-radius").value,
       lungVolumeMl: volumeUnit.value === "mm3" ? rawVolume / 1000 : rawVolume,
-      heightCm: document.getElementById("height").value,
+      heightCm,
     };
   }
 
@@ -85,15 +141,18 @@
     results.hidden = false;
   }
 
-  form.addEventListener("submit", function (event) {
+  form.addEventListener("submit", async function (event) {
     event.preventDefault();
     clearError();
     if (!form.checkValidity()) {
-      showError("Complete all four measurements and make sure every value is greater than 0.");
+      showError(selectedSource() === "file"
+        ? "Enter height and select a valid feature file."
+        : "Enter height and all three measurements. Every value must be greater than 0.");
       form.reportValidity();
       return;
     }
     try {
+      await fileReadPromise;
       const calculation = window.TRACECalculator.calculate(
         readInputs(),
         window.TRACE_REFERENCE,
@@ -107,12 +166,23 @@
 
   form.addEventListener("reset", function () {
     window.setTimeout(function () {
+      clearFilePreview();
+      fileReadPromise = Promise.resolve();
+      updateSourcePanels();
       clearError();
       results.hidden = true;
     }, 0);
   });
 
+  sourceInputs.forEach((input) => input.addEventListener("change", updateSourcePanels));
+
+  featureFileInput.addEventListener("change", function () {
+    fileReadPromise = loadFeatureFile();
+  });
+
   volumeUnit.addEventListener("change", function () {
     volumeInput.placeholder = volumeUnit.value === "mm3" ? "e.g. 3854105" : "e.g. 3854";
   });
+
+  updateSourcePanels();
 })();
